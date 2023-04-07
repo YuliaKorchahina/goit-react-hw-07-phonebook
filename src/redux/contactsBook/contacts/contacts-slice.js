@@ -40,8 +40,10 @@ const contactsSlice = createSlice({
     },
     [deleteContact.fulfilled]: (store, { payload }) => {
       store.loading = false;
-      const index = store.findIndex(contact => contact.id === payload);
-      store.splice(index, 1);
+      store.error = null;
+      const index = store.items.findIndex(contact => contact.id === payload.id);
+      store.items.splice(index, 1);
+      // store.items = store.items.filter(contact => contact.id !== payload)
     },
     [deleteContact.rejected]: (store, { payload }) => {
       store.loading = false;

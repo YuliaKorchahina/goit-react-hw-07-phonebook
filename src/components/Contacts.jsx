@@ -23,10 +23,10 @@ export const ContactsList = () => {
   const loading = useSelector(selectLoading);
   // const error = useSelector(selectError);
   const dispatch = useDispatch();
+  console.log(contacts);
 
-  const onDelete = ({id}) => {
+  const onDelete = id => {
     dispatch(deleteContact(id));
-    console.log(contacts.id);
   };
 
   return (
@@ -37,7 +37,8 @@ export const ContactsList = () => {
         getFiltredContacts(contacts, filter).map(({ id, name, number }) => (
           <li key={id}>
             {name} : {number}{' '}
-            <button type="button" onClick={onDelete}>
+            {/* <button type="button" onClick={()=>dispatch(deleteContact(id))}> */}
+            <button type="button" onClick={() => onDelete(id)}>
               ❌
             </button>
           </li>
