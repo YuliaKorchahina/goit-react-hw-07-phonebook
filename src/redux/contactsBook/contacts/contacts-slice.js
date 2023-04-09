@@ -6,52 +6,42 @@ const initialState = {
   loading: false,
   error: null,
 };
+
+const handleRejected = (store, { payload }) => {
+  store.loading = false;
+  store.error = payload;
+};
+
+const handlePending = store => {
+  store.loading = true;
+  store.error = null;
+};
+
 const contactsSlice = createSlice({
   name: 'contacts',
   initialState,
   extraReducers: {
-    [fetchContacts.pending]: store => {
-      store.loading = true;
-      store.error = null;
-    },
+    [fetchContacts.pending]: handlePending,
     [fetchContacts.fulfilled]: (store, { payload }) => {
       store.loading = false;
       store.items = payload;
     },
-    [fetchContacts.rejected]: (store, { payload }) => {
-      store.loading = false;
-      store.error = payload;
-    },
-    [addContact.pending]: store => {
-      store.loading = true;
-      store.error = null;
-    },
+    [fetchContacts.rejected]: handleRejected,
+    [addContact.pending]: handlePending,
     [addContact.fulfilled]: (store, { payload }) => {
       store.loading = false;
       store.items.push(payload);
     },
-    [addContact.rejected]: (store, { payload }) => {
-      store.loading = false;
-      store.error = payload;
-    },
-    [deleteContact.pending]: store => {
-      store.loading = true;
-      store.error = null;
-    },
+    [addContact.rejected]: handleRejected,
+    [deleteContact.pending]: handlePending,
     [deleteContact.fulfilled]: (store, { payload }) => {
       store.loading = false;
       store.error = null;
       const index = store.items.findIndex(contact => contact.id === payload.id);
       store.items.splice(index, 1);
-      // store.items = store.items.filter(contact => contact.id !== payload)
     },
-    [deleteContact.rejected]: (store, { payload }) => {
-      store.loading = false;
-      store.error = payload;
-    },
+    [deleteContact.rejected]: handleRejected,
   },
 });
-
-// export const { addContact, deleteContact } = contactsSlice.actions;
 
 export const contactsReducer = contactsSlice.reducer;

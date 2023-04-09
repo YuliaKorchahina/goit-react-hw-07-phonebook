@@ -1,13 +1,10 @@
+import { selectFilter } from 'redux/contactsBook/filter/filter-selector';
+import { deleteContact } from 'redux/operations';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import {
-  selectLoading,
-  // selectError,
-  selectContacts,
-} from 'redux/contactsBook/contacts/contacts-selector';
+import {selectLoading, selectContacts} from 'redux/contactsBook/contacts/contacts-selector';
 
-import { deleteContact } from 'redux/operations';
-import { selectFilter } from 'redux/contactsBook/filter/filter-selector';
+import { Loader } from 'helpers/loader';
 
 const getFiltredContacts = (contacts, filterValue) => {
   const normalizedFilter = filterValue.toLocaleLowerCase();
@@ -21,23 +18,19 @@ export const ContactsList = () => {
   const filter = useSelector(selectFilter);
   const contacts = useSelector(selectContacts);
   const loading = useSelector(selectLoading);
-  // const error = useSelector(selectError);
   const dispatch = useDispatch();
-  console.log(contacts);
-
   const onDelete = id => {
     dispatch(deleteContact(id));
   };
 
   return (
     <ol>
-      {loading && <p>...loading</p>}
+      {loading && <Loader />}
       {!loading &&
         contacts.length > 0 &&
         getFiltredContacts(contacts, filter).map(({ id, name, number }) => (
           <li key={id}>
             {name} : {number}{' '}
-            {/* <button type="button" onClick={()=>dispatch(deleteContact(id))}> */}
             <button type="button" onClick={() => onDelete(id)}>
               ❌
             </button>
